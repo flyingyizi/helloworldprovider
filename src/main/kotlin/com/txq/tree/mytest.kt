@@ -23,7 +23,7 @@ fun writeFile(size:Int,outfile:String="\\src\\testfile.txt") {
             out.println("${uuid} ,${random}")
         }
         // fixed for check
-        out.println("hello browser service, 12345")
+        out.println("hellobrowser, 12345")
     }
 }
 
@@ -74,6 +74,34 @@ fun dupAddToForest(forest: SmartForest<Int>,dups:Int) {
     }
 }
 
+// 查询keyword，检查耗时
+fun queryKey(forest: SmartForest<Int>,fromfile:String="\\src\\testfile.txt") {
+    val file = File(System.getProperty("user.dir"), fromfile)
+
+    val reader = Scanner(file.inputStream())
+    var i=0
+    var start = System.currentTimeMillis()
+    try {
+        while(reader.hasNextLine()) {
+            val strlist = reader.nextLine().split(",")
+            if ( strlist.size == 2 ) {
+                start = System.currentTimeMillis()
+                val result = forest.getBranch(strlist[0].trim()/**/)?.param
+                println("key:${strlist[0].trim()}query consumed: ${System.currentTimeMillis() - start} ms。 result SET size:${result?.size}")
+            }
+            //           if(i>20000&&i%20000==0) {
+            //               println("add num:${i}")
+            //           }
+        }
+    }catch(e:IOException ){
+        //logger.error(e);
+    }finally {
+        reader.close();
+    }
+}
+
+
+
 fun main(args : Array<String>) {
 
     var start = System.currentTimeMillis()
@@ -91,22 +119,12 @@ fun main(args : Array<String>) {
     dupAddToForest(forest,homepagenum)
 
     println("load file to forest consumed: ${System.currentTimeMillis() - start} ms")
+    /*
     start = System.currentTimeMillis()
     // 检查query
-    println(forest.getBranch("hello browser service")?.param)
+    val result = forest.getBranch("hellobrowser")?.param
     println("query consumed: ${System.currentTimeMillis() - start} ms")
- /*
-   */
-          /**
-        forest.add("中国", 11)
-        forest.add("中国人", 12)
-        forest.add("java", 21)
-        forest.add("javaandroid", 22)
-
-        var content = " Android-java-中国人"
-        //forest.remove("中国人")
-        println(forest.getBranch("java")?.param)
-        println(forest.getBranch("中国")?.param)
-        println(forest.getBranch("中国人")?.param)
+    println("result SET size:${result?.size}")
     */
+    queryKey(forest)
 }
