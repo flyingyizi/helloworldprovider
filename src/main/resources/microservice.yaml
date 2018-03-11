@@ -1,0 +1,23 @@
+APPLICATION_ID: helloTest
+service_description:
+  name: helloworldprovider
+  version: 0.0.1
+  properties:
+    allowCrossApp: false
+cse:
+  service:
+    registry:
+      address: https://cse.cn-north-1.myhwclouds.com:443
+      instance:
+        watch: false
+  config:
+    client:
+      serverUri: https://cse.cn-north-1.myhwclouds.com:443
+      refreshMode: 1
+      refresh_interval: 5000
+  rest:
+    address: 0.0.0.0:8087
+  credentials:
+    accessKey: 3XV3E9SQLWZANAAPQW5P
+    secretKey: h4mr0N6U8M18iAKgyUdYHTXgQyrc4KAlW6eiwAsS
+    project: cn-north-1

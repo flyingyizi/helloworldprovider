@@ -1,0 +1,249 @@
+<?xml version="1.0"?>
+<project
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+        xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.service</groupId>
+    <artifactId>helloworldprovider</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <name>helloworldprovider</name>
+    <url>http://maven.apache.org</url>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <cse.version>2.2.39</cse.version>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <demo.main>com.service.helloworldprovider.HelloworldproviderApplication</demo.main>
+        
+        <kotlin.version>1.2.21</kotlin.version>
+        <!--<kotlin.compiler.incremental>true</kotlin.compiler.incremental>-->
+        
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.huawei.paas.cse</groupId>
+                <artifactId>cse-dependency</artifactId>
+                <version>${cse.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <!--kotlin的编译器-->
+      <dependency>
+        <groupId>org.jetbrains.kotlin</groupId>
+        <artifactId>kotlin-stdlib</artifactId>
+        <version>${kotlin.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jetbrains.kotlinx</groupId>
+        <artifactId>kotlinx-coroutines-core</artifactId>
+        <version>0.21</version>
+      </dependency>
+
+      <!-- https://mvnrepository.com/artifact/org.mousio/etcd4j -->
+      <dependency>
+        <groupId>org.mousio</groupId>
+        <artifactId>etcd4j</artifactId>
+        <version>2.15.0</version>
+      </dependency>
+
+        <dependency>
+            <groupId>com.huawei.paas.cse</groupId>
+            <artifactId>cse-solution-service-engine</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+        </dependency>
+              <!--使用REST over Vertx网络通道-->
+      <!--
+      <dependency>
+        <groupId>org.apache.servicecomb</groupId>
+        <artifactId>provider-springmvc</artifactId>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.servicecomb</groupId>
+        <artifactId>transport-rest-vertx</artifactId>
+      </dependency>
+-->
+      <!-- https://mvnrepository.com/artifact/org.elasticsearch/elasticsearch -->
+      <dependency>
+        <groupId>org.elasticsearch</groupId>
+        <artifactId>elasticsearch</artifactId>
+        <version>6.2.1</version>
+      </dependency>
+      <!-- https://mvnrepository.com/artifact/org.elasticsearch.client/transport -->
+      <dependency>
+        <groupId>org.elasticsearch.client</groupId>
+        <artifactId>transport</artifactId>
+        <version>6.2.1</version>
+      </dependency>
+
+
+    </dependencies>
+
+    <build>
+        <plugins>
+        
+            <!--kotlin的编译器-->
+            <plugin>
+                <artifactId>kotlin-maven-plugin</artifactId>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <version>${kotlin.version}</version>
+                <executions>
+                    <execution>
+                        <id>compile</id>
+                        <goals> <goal>compile</goal> </goals>
+                        <configuration>
+                            <jvmTarget>1.8</jvmTarget>
+                            <sourceDirs>
+                                <sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
+                                <sourceDir>${project.basedir}/src/main/java</sourceDir>
+                            </sourceDirs>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>test-compile</id>
+                        <goals> <goal>test-compile</goal> </goals>
+                        <configuration>
+                            <jvmTarget>1.8</jvmTarget>
+                            <sourceDirs>
+                                <sourceDir>${project.basedir}/src/test/kotlin</sourceDir>
+                                <sourceDir>${project.basedir}/src/test/java</sourceDir>
+                            </sourceDirs>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            
+            <!--Compiling Kotlin and Java sources-->
+		    <plugin>
+		            <groupId>org.apache.maven.plugins</groupId>
+		            <artifactId>maven-compiler-plugin</artifactId>
+		            <version>3.5.1</version>
+		            <executions>
+		                <!-- Replacing default-compile as it is treated specially by maven -->
+		                <execution>
+		                    <id>default-compile</id>
+		                    <phase>none</phase>
+		                </execution>
+		                <!-- Replacing default-testCompile as it is treated specially by maven -->
+		                <execution>
+		                    <id>default-testCompile</id>
+		                    <phase>none</phase>
+		                </execution>
+		                <execution>
+		                    <id>java-compile</id>
+		                    <phase>compile</phase>
+		                    <goals> <goal>compile</goal> </goals>
+		                </execution>
+		                <execution>
+		                    <id>java-test-compile</id>
+		                    <phase>test-compile</phase>
+		                    <goals> <goal>testCompile</goal> </goals>
+		                </execution>
+		            </executions>
+		    </plugin>        
+		        
+        
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.10</version>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>target/lib</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.8</version>
+                <executions>
+                    <execution>
+                        <id>make-vm-zip</id>
+                        <phase>package</phase>
+                        <configuration>
+                        <target>
+                            <zip destfile="target/${build.finalName}.zip">
+                            <zipfileset dir="target/lib" prefix="lib" />
+                            <zipfileset dir="target" includes="*.jar" />
+                            <zipfileset dir="." includes="start.sh" />
+                            </zip>
+                        </target>
+                        </configuration>
+                            <goals>
+                                <goal>run</goal>
+                            </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>./lib/</classpathPrefix>
+                            <mainClass>${demo.main}</mainClass>
+                        </manifest>
+                        <manifestEntries>
+                            <Class-Path>.</Class-Path>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+
+            <!--Self-contained Jar file-->
+			<plugin>
+			    <groupId>org.apache.maven.plugins</groupId>
+			    <artifactId>maven-assembly-plugin</artifactId>
+			    <version>2.6</version>
+			    <executions>
+			        <execution>
+			            <id>make-assembly</id>
+			            <phase>package</phase>
+			            <goals> <goal>single</goal> </goals>
+			            <configuration>
+			                <archive>
+			                    <manifest>
+			                        <mainClass>${demo.main}</mainClass>
+			                    </manifest>
+			                </archive>
+			                <descriptorRefs>
+			                    <descriptorRef>jar-with-dependencies</descriptorRef>
+			                </descriptorRefs>
+			            </configuration>
+			        </execution>
+			    </executions>
+			</plugin>
+
+        </plugins>
+    </build>
+</project>
